@@ -10,7 +10,7 @@
  *
  */
 
- namespace JuniorAri\Utils;
+ namespace JuniorAri\JUtils;
 
 
 class JUtils {
