@@ -13,11 +13,11 @@
  namespace JuniorAri\Utils;
 
 
-class Utils {
+class JUtils {
 
 	/**
 	 * Constants defineds to best legibility source-code. The prefix NN_ mean who
-	 * it is related to public method capitalName().
+	 * it is related to public method capitalizeName().
 	 */
 	const NN_POINT = '\.';
 	const NN_SPACE_POINT = '. ';
@@ -58,7 +58,7 @@ class Utils {
 	 * @param string $name O nome a ser normalizado
 	 * @return string O nome devidamente normalizado
 	 */
-    public function capitalName($name)
+    public function capitalizeName($name)
     {
 
         try {

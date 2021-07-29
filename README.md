@@ -5,7 +5,7 @@ Class for methods and lot of stuff utilities
 ## Getting Started
 
 ```
-composer require juniorari\utils
+$ composer require juniorari/utils
 ```
 Or add on your require section of your **composer.json**
 ```
@@ -23,7 +23,7 @@ extension=mbstring
 
 On Linux, run command (where X is a version of your PHP):
 ```
-sudo apt-get install php7.X-mbstring
+$ sudo apt-get install php7.X-mbstring
 ```
 
 <!--

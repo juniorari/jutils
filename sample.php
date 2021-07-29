@@ -1,7 +1,7 @@
 <?php
 require __DIR__ . '/vendor/autoload.php';
 
-use JuniorAri\Utils\Utils;
+use JuniorAri\Utils\JUtils;
 
-$utils = new Utils();
+$utils = new JUtils();
 echo $utils->capitalName("josé antônio da silva");
