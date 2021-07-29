@@ -4,48 +4,61 @@ Class for methods and lot of stuff utilities
 
 ## Getting Started
 
+Execute command line:
 ```
-$ composer require juniorari/utils
+$ composer require juniorari/jutils
 ```
 Or add on your require section of your **composer.json**
 ```
-"juniorari/utils": "stable"
+"juniorari/jutils": "stable"
 ```
 
 ### Prerequisities
 - PHP >= 7.0
 - Extension PHP mb_string enabled
+- Extension PHP curl enabled
 
 On Windows, locate and edit **php.ini** file, and uncomment line:
 ```
 extension=mbstring
+extension=curl
 ```
 
 On Linux, run command (where X is a version of your PHP):
 ```
 $ sudo apt-get install php7.X-mbstring
+$ sudo apt-get install php7.X-curl
 ```
+
+## How to use
+```
+<?php
+use JuniorAri\Utils\JUtils;
+$utils = new JUtils();
+echo $utils->capitalizeName("josé antônio da silva");
+```
+or
+```
+echo JUtils::capitalizeName("josé antônio da silva");
+```
+
+## Functions:
+Function  | What       |
+----------|------------|
+capitalizeName  | Capitalize a string
+toUpper         | Convert to uppercase 
+toLower         | Convert to lowercase
+removeAccents   | Remove accenst from string                        
+createAlias     | Create an alias
+searchCEP       | Search a brazilian CEP                             
+dateToday       | Return today date
+dateIsValid     | Check if is valide an date on specified format    
+
+
+
+@github: github.com:juniorari/jutils 
 
 <!--
-### Installing
-
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
 
 Explain how to run the automated tests for this system
 

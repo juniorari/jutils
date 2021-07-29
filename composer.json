@@ -11,13 +11,14 @@
     ],
     "autoload" : {
         "psr-4" : {
-            "JuniorAri\\JUtils\\" :  "src/"
+            "JuniorAri\\Utils\\" :  "src/"
         }
     },
     "minimum-stability": "stable",
     "require": {
         "php": ">=7.1.0",
-        "ext-mbstring": "*"
+        "ext-mbstring": "*",
+        "ext-curl": "*"
     },
     "require-dev": {}
 }

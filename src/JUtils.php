@@ -4,14 +4,18 @@
  * Class conteiner for methods and lot of stuff utilities
  *
  * @required:
- *  - ext-mbstring enabled on php.ini
+ *  - mbstring enabled on php.ini
+ *  - curl enabled on php.ini
  *
  * @author Ari Junio(r) 
  *
  */
 
- namespace JuniorAri\JUtils;
 
+namespace JuniorAri\Utils;
+
+
+use Exception;
 
 class JUtils {
 
@@ -45,7 +49,7 @@ class JUtils {
 		date_default_timezone_set($this->_timeZone);
 	}
 
-    private static function printError(\Exception $e) {
+    private static function printError(Exception $e) {
         die("ERRO #`{$e->getCode()}` - `{$e->getMessage()}`<br>File: `{$e->getFile()}`:`{$e->getLine()}`:");
     }
 
@@ -58,7 +62,7 @@ class JUtils {
 	 * @param string $name O nome a ser normalizado
 	 * @return string O nome devidamente normalizado
 	 */
-    public function capitalizeName($name)
+    public static function capitalizeName($name)
     {
 
         try {
@@ -145,7 +149,7 @@ class JUtils {
             return implode(self::NN_SPACE, $partesNome);
 
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             self::printError($e);
 
@@ -214,4 +218,213 @@ class JUtils {
         return $string;
     }
 
+
+    /**
+     * The function is to replace all characters with "-", except if it is letters or numbers.
+     * Also minimizes, leaving the string like an page alias (nickname)
+     * @param string The name to be transformed
+     * @return string An friendly name ro page
+     */
+    public static function createAlias($str) {
+        $str = JUtils::removeAccents($str);
+        $str = preg_replace('/[-]/ui', '', $str);
+        $str = str_replace('  ', ' ', $str);
+        $str = str_replace(',', '', $str);
+        $str = preg_replace('/[^a-z0-9]/i', '-', $str);
+        $str = preg_replace('/_+/', '-', $str); // ideia do Bacco :)
+        return JUtils::toLower($str);
+    }
+
+
+    /**
+     * Return the address of ZIP Code, based on API of www.postmon.com.br
+     * @param string $cep The ZIP code,
+     * @return bool|string An array in string format white address complete of ZIP
+     */
+    public static function searchCEP($cep){
+
+        $c = preg_replace('/[^0-9]/is', '', $cep);
+        if (!is_numeric($c)) {
+            return null;
+        }
+
+        $url = "http://api.postmon.com.br/v1/cep/".$c;
+
+        $ch = curl_init();
+
+        // informar URL e outras funções ao CURL
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FILETIME, true);
+
+        return curl_exec($ch);
+    }
+
+
+    /**
+     * Return today date, in format specified.
+     * @param string $format If not specified, will return on format dd/mm/yyyy
+     * @return false|string
+     */
+    public static function dateToday($format="d/m/Y") {
+        return date($format);
+    }
+
+    /**
+     * Check if is valide an date on specified format
+     * Examples:
+     * <code>
+     * dateIsValid('22.22.2222', 'mm.dd.yyyy'); // returns false
+     * dateIsValid('11/30/2008', 'mm/dd/yyyy'); // returns true
+     * dateIsValid('30-01-2008', 'dd-mm-yyyy'); // returns true
+     * dateIsValid('2008 01 30', 'yyyy mm dd'); // returns true
+     * dateIsValid('28/02/2018'); // returns true
+     * </code>
+     * @param string $data The date to be checked
+     * @param string formato The format
+     * @return bool True if is valid or False if not
+     * @throws Exception
+     */
+    public static function dateIsValid($data, $formato = 'dd/mm/yyyy') {
+        try {
+
+            switch ($formato) {
+                case 'dd-mm-yyyy':
+                case 'dd mm yyyy':
+                case 'dd.mm.yyyy':
+                case 'dd/mm/yyyy':
+                    $d = substr($data, 0, 2);
+                    $m = substr($data, 3, 2);
+                    $a = substr($data, 6, 4);
+                    break;
+                case 'yyyy/mm/dd':
+                case 'yyyy mm dd':
+                case 'yyyy.mm.dd':
+                case 'yyyy-mm-dd':
+                    $a = substr($data, 0, 4);
+                    $m = substr($data, 5, 2);
+                    $d = substr($data, 8, 2);
+                    break;
+                case 'yyyy/dd/mm':
+                case 'yyyy dd mm':
+                case 'yyyy.dd.mm':
+                case 'yyyy-dd-mm':
+                    $a = substr($data, 0, 4);
+                    $d = substr($data, 5, 2);
+                    $m = substr($data, 8, 2);
+                    break;
+                case 'mm-dd-yyyy':
+                case 'mm dd yyyy':
+                case 'mm.dd.yyyy':
+                case 'mm/dd/yyyy':
+                    $m = substr($data, 0, 2);
+                    $d = substr($data, 3, 2);
+                    $a = substr($data, 6, 4);
+                    break;
+                case 'yyyymmdd':
+                    $a = substr($data, 0, 4);
+                    $m = substr($data, 4, 2);
+                    $d = substr($data, 6, 2);
+                    break;
+                case 'yyyyddmm':
+                    $a = substr($data, 0, 4);
+                    $d = substr($data, 4, 2);
+                    $m = substr($data, 6, 2);
+                    break;
+                case 'ddmmyyyy':
+                    $d = substr($data, 0, 2);
+                    $m = substr($data, 2, 2);
+                    $a = substr($data, 4, 4);
+                    break;
+                case 'mmddyyyy':
+                    $m = substr($data, 0, 2);
+                    $d = substr($data, 2, 2);
+                    $a = substr($data, 4, 4);
+                    break;
+                default:
+                    throw new Exception("Invalid format type");
+                    break;
+            }
+
+            //se o dia ou mes nao for 2 numeros ou o ano nao for 4 numeros, é falso, não está no formato especificado
+            if (
+                strlen(preg_replace( '/[^0-9]/is', '', $d )) != 2 ||
+                strlen(preg_replace( '/[^0-9]/is', '', $m )) != 2 ||
+                strlen(preg_replace( '/[^0-9]/is', '', $a )) != 4
+            ) {
+                return false;
+            }
+            return checkdate($m, $d, $a);
+
+        } catch (\Exception $e) {
+            self::printError($e);
+        }
+    }
+
+    /**
+     * Converte a data do formato DD/MM/YYYY para o formato do MYSQL YYYY-MM-DD.
+     * Se já estiver no formato YYYY-MM-DD, retorna a mesma data.
+     * Se vier com a hora coloca ela no final
+     * @param string $dta opcional - se vier, retorna a data que veio no formato do Mysql, se não vier, usa a data de hoje
+     * @param boolean $retornaAtual boolean opcional - se não vier a data, retorna NULL se for false, ou usa a data de hoje se for TRUE
+     * @return timestamp 	- retorna a data especificada (ou não) no formato do MySql
+     */
+    public static function ConverteDataParaMysql($dta="", $retornaAtual=false) {
+
+        try {
+
+            //se já estiver no formato do mysql
+            if (Utils::isDataValida($dta, 'yyyy-mm-dd')) {
+                return trim($dta);
+            }
+
+
+            //debug($data . " dd/mm/yyyy");
+            //tem hora na data??
+            $datas = explode(" ", $dta);
+            $data = $datas[0];
+            if (count($datas)>1) {
+                $arrHr = explode(":", $datas[1]);
+                if (count($arrHr)==3) {
+                    $hora = $arrHr[0].":".$arrHr[1].":".$arrHr[2];
+                } elseif (count($arrHr)==2) {
+                    $hora = $arrHr[0].":".$arrHr[1].":00";
+                } else {
+                    $hora = $datas[1];
+                }
+
+            } else {
+                $hora = "";
+            }
+
+            //debug($data);
+            //debug($dta);
+
+            //debug("$data <> $dta",1);
+            //debug(Utils::isDataValida($data, "dd/mm/yyyy"),0);
+
+            //debug($hora);
+            if (!Utils::isDataValida($data, "dd/mm/yyyy") || $data == "") {
+                return trim(($retornaAtual ? date("Y-m-d") . " " . $hora : NULL));
+            }
+
+            //se for passado uma data inválida, assume a data atual
+            //if(isDataValida($data,"dd/mm/yyyy"))
+            //$data = date("d/m/Y");
+            //debug("==>".$data,0);
+
+
+            $date_array = explode("/",$data);
+            if(count($date_array)!=3) return false;
+            return trim($date_array[2] . "-" . $date_array[1] . "-" . $date_array[0] . " " . $hora);
+            //return strtotime($data);
+
+
+        } catch (RuntimeException $e) {
+
+            die($e->getMessage());
+
+        }
+    }
 }
