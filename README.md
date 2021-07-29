@@ -45,15 +45,36 @@ echo JUtils::capitalizeName("josé antônio da silva");
 ## Functions:
 Function  | What       |
 ----------|------------|
-capitalizeName  | Capitalize a string
-toUpper         | Convert to uppercase 
-toLower         | Convert to lowercase
-removeAccents   | Remove accenst from string                        
-createAlias     | Create an alias
-searchCEP       | Search a brazilian CEP                             
-dateToday       | Return today date
-dateIsValid     | Check if is valide an date on specified format    
+capitalizeName      | Capitalize a string
+toUpper             | Convert to uppercase 
+toLower             | Convert to lowercase
+removeAccents       | Remove accenst from string                        
+createAlias         | Create an alias
+searchCEP           | Search a brazilian CEP                             
+dateToday           | Return today date
+dateIsValid         | Check if is valide an date on specified format    
+dateToMysql         | Converts date from DD/MM/YYYY format to MYSQL format YYYY-MM-DD.
+datePrintDate       | Prints a date in a specified format
+dateHourNowMysql    | Imprime a data de hoje no formato do MySQL: Y-m-d H:i:s
+datePortuguese      | Imprime a Data em Português no formato: 01 de janeiro de 2000
+converteMoeda       | Formata um valor para o formato moeda, tanto brasileiro quanto americano
+formatoMoeda        | Mostrar o valor em formato moeda com o R$
+imprimeNome         | Imprime o nome de uma pessoa com a quantidade de nomes especificados, não considerando os artigos na ultima posição.
+mostrarCEP          | Função para mostrar o CEP no formato com os pontos e traço.
+mostrarCPF          | Função para mostrar o CNPJ no formato com os pontos
+serializaDados      | Serializa os dados
+unserializaDados    | Retorna os dados deserializados
+simNao              | Retorna Sim ou Não com a fonte awesome
+dateSomaDiasHoje    | Soma X dias a data de hoje
+dateSomaData        | Soma X dias a data especificada
+somenteNumeros      | Retorna somente os números de uma string
+strCorta            | Faz o corte de uma string, com o tamanho definido
+strZeros            | Função para colocar a quantidade de zeros a esquerda
+validaCPF           | Valida CPF
+validaEmail         | Verifica se um email é válido ou não
+validaURL           | Valida uma URL, se tem a aparência válida ou não
 
+ 
 
 
 @github: github.com:juniorari/jutils 
